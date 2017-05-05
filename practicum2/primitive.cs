@@ -38,6 +38,15 @@ namespace Template
             _rad = rad;
         }
 
+        public Vector3 getPosition()
+        {
+            return _pos;
+        }
+        public float getRadius()
+        {
+            return _rad;
+        }
+
         public override float intersect(Ray ray)
         {
             Vector3 c = _pos - ray.Origin;
@@ -45,11 +54,11 @@ namespace Template
             Vector3 q = c - t * ray.Direction;
             float p2 = Vector3.Dot(q, q);
             if (p2 > _rad * _rad)
-                return -5.0f;
+                return -1.0f;
             t -= (float)Math.Sqrt(_rad * _rad - p2);
             if ((t < ray.Distance) && (t > 0))
                 return t;
-            return -6.0f;
+            return -1.0f;
         }
     }
 
@@ -57,5 +66,21 @@ namespace Template
     {
         private Vector3 _nor;
         private float _dis;
+
+        public Plane(Vector3 nor,  float dis)
+        {
+            _nor = nor;
+            _dis = dis;
+        }
+
+        public override float intersect(Ray ray)
+        {
+            float t = -(Vector3.Dot(ray.Origin, _nor) + _dis);
+            t /= Vector3.Dot(ray.Direction, _nor);
+            if (t < ray.Distance)
+                return t;
+            else
+                return -1.0f;
+        }
     }
 }
