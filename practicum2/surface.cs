@@ -157,16 +157,17 @@ namespace Template
         public void Circle(int x, int y, float r,int c)
         {
 
+
             float angle = 0;
             float x2 = 0;
             float y2 = 0;
             while (angle < 2 * Math.PI)
             {
-                x2 = x2 + (float)(r * Math.Cos(angle));
-                y2 = y2 + (float)(r * Math.Sin(angle));
+                x2 =  (float)(r * Math.Cos(angle));
+                y2 =  (float)(r * Math.Sin(angle));
                 // decide how to round your floating point X,Y here ...
-                Plot(x+ (int)x2,y+(int)y2,c);
-                angle += 0.01f;
+                Plot(x + (int)x2, y + (int)y2, c);
+                angle += 0.03f;
             }
         }
 
