@@ -89,7 +89,7 @@ namespace Template
                     t = scene.intersectWithScene(new Ray(origin, direction));
                     if (t > 0)
                     {
-                        col = (int)((1 / (t * t) * 1000)) << 16;
+                        col = ((int)((1 / (t * t) * 255)) << 16) + ((int)((1 / (t * t) * 255)) << 8) ;
                     }
                     screen.pixels[i + j * screen.width] = col;
                     if (j == h / 2 && i % 32 == 0)
