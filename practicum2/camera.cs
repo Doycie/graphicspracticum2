@@ -14,17 +14,23 @@ namespace Template
         {
             _pos = pos;
             _dir = dir;
-            _spCenter = _pos + _dir;
-            _spCorners = new Vector3[3];
-            _spCorners[0] = _spCenter + new Vector3(-1.0f, -1.0f, 0.0f);
-            _spCorners[1] = _spCenter + new Vector3(1.0f, -1.0f, 0.0f);
-            _spCorners[2] = _spCenter + new Vector3(-1.0f, 1.0f, 0.0f);
+            calculateCornors();
         }
 
         public void lookAt(Vector3 p)
         {
             _dir = p - _pos;
             _dir.Normalize();
+            calculateCornors();
+        }
+
+        private void calculateCornors()
+        {
+            _spCenter = _pos + _dir;
+            _spCorners = new Vector3[3];
+            _spCorners[0] = _spCenter + new Vector3(-1.0f, -1.0f, 0.0f);
+            _spCorners[1] = _spCenter + new Vector3(1.0f, -1.0f, 0.0f);
+            _spCorners[2] = _spCenter + new Vector3(-1.0f, 1.0f, 0.0f);
         }
 
         public void transform(Matrix4 M)

@@ -1,5 +1,7 @@
 ﻿using OpenTK;
 using System.Collections.Generic;
+using OpenTK.Input;
+using System;
 
 namespace Template
 {
@@ -21,6 +23,8 @@ namespace Template
             d_height = screen.height;
             d_offsetX = screen.width / 2;
             d_offsetY = 0;
+
+            camera.lookAt(new Vector3(1.0f,0.0f, 2.0f));
         }
 
         // tick: renders one framed
@@ -50,7 +54,7 @@ namespace Template
 
         private int TY(float y)
         {
-            return (int)((y + d_scale / 2.0f) * d_height / d_scale) + d_offsetY;
+            return (int)((y + d_scale / 1.2f) * d_height / d_scale) + d_offsetY;
         }
 
         private void RenderDebug()
@@ -74,6 +78,22 @@ namespace Template
             }
         }
 
+
+        float x = 0;
+        public void Input(KeyboardState keyboard)
+        {
+            if (keyboard[OpenTK.Input.Key.D])
+            {
+                x += 0.1f;
+                camera.lookAt(new Vector3(x, 0.0f, 2.0f));
+            }
+            if (keyboard[OpenTK.Input.Key.A])
+            {
+                x -= 0.1f;
+                camera.lookAt(new Vector3(x, 0.0f, 2.0f));
+            }
+        }
+
         private void RenderRaycastScene(int w, int h)
         {
             Vector3 origin = camera.getPosition();
@@ -94,6 +114,9 @@ namespace Template
                     screen.pixels[i + j * screen.width] = col;
                     if (j == h / 2 && i % 32 == 0)
                     {
+                        if(t <= 0){
+                            t = 100.0f; 
+                        }
                         screen.Line(TX(camera.getPosition().X), TY(-camera.getPosition().Z), TX(((t) * direction).X), TY(-((t) * direction).Z), 255 << 8);
                     }
                 }
