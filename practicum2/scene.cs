@@ -6,7 +6,7 @@ namespace Template
     struct Intersect{
         public float Distance;
         public float Col;
-        public Ray OriginalRay;
+        public Ray originalRay;
 
     }
     class Scene
@@ -23,24 +23,22 @@ namespace Template
             entities.Add(new Plane(new Vector3(0, -10, 0), 10.0f));
         }
 
-        public float intersectWithScene(Ray ray)
+        public float IntersectWithScene(Ray ray)
         {
-            float distance = 0;
-
             foreach (var primitive in entities)
             {
                 float dis = primitive.Intersect(ray);
                 if(dis > 0)
                 {
-                    ray.Distance = dis;
-                    distance = dis;
+                    ray.distance = dis;
+                    return dis;
                 }
             }
 
-            return distance;
+            return 0;
         }
 
-        public List<Primitive> getObjects()
+        public List<Primitive> GetObjects()
         {
             return entities;
         }

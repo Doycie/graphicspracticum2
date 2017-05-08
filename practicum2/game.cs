@@ -47,7 +47,7 @@ namespace Template
 
         private int TY(float y)
         {
-            return (int)((y + d_scale / 1.2f) * d_height / d_scale) + d_offsetY;
+            return (int)((-y + d_scale / 1.2f) * d_height / d_scale) + d_offsetY;
         }
 
         public void Input(KeyboardState keyboard)
@@ -78,7 +78,7 @@ namespace Template
                     col = 0;
 
                     Intersect intersect = new Intersect();
-                    t = scene.intersectWithScene(new Ray(origin, direction));
+                    t = scene.IntersectWithScene(new Ray(origin, direction));
                     if (t > 0)
                     {
                         col = ((int)((1 / (t * t) * 255)) << 16) + ((int)((1 / (t * t) * 255)) << 8);
