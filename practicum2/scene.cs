@@ -23,7 +23,7 @@ namespace Template
 
             foreach (var primitive in entities)
             {
-                float dis = primitive.intersect(ray);
+                float dis = primitive.Intersect(ray);
                 if(dis > 0)
                 {
                     ray.Distance = dis;
