@@ -16,12 +16,13 @@ namespace Template
         public float Distance;
     }
 
-    class Primitive
+    abstract class Primitive
     {
-        public virtual float intersect(Ray ray)
-        {
+        public abstract float Intersect(Ray ray);
 
-            return -3.0f;
+        public virtual void RenderDebug(Ray ray)
+        {
+            
         }
     }
 
@@ -38,16 +39,16 @@ namespace Template
             _rad = rad;
         }
 
-        public Vector3 getPosition()
+        public Vector3 GetPosition()
         {
             return _pos;
         }
-        public float getRadius()
+        public float GetRadius()
         {
             return _rad;
         }
 
-        public override float intersect(Ray ray)
+        public override float Intersect(Ray ray)
         {
             Vector3 c = _pos - ray.Origin;
             float t = Vector3.Dot(c, ray.Direction);
@@ -73,7 +74,7 @@ namespace Template
             _dis = dis;
         }
 
-        public override float intersect(Ray ray)
+        public override float Intersect(Ray ray)
         {
             float t = -(Vector3.Dot(ray.Origin, _nor) + _dis);
             t /= Vector3.Dot(ray.Direction, _nor);
