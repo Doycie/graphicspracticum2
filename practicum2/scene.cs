@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using OpenTK;
 namespace Template
 {
+    struct Intersect{
+        public float Distance;
+        public float Col;
+        public Ray OriginalRay;
+
+    }
     class Scene
     {
         private List<Primitive> entities;

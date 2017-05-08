@@ -24,7 +24,7 @@ namespace Template
             d_offsetX = screen.width / 2;
             d_offsetY = 0;
 
-            camera.lookAt(new Vector3(1.0f,0.0f, 2.0f));
+           // camera.lookAt(new Vector3(1.0f,0.0f, 2.0f));
         }
 
         // tick: renders one framed
@@ -106,6 +106,8 @@ namespace Template
                 {
                     direction = camera.getRayDirection(i / (float)w, j / (float)h);
                     col = 0;
+
+                    Intersect intersect = new Intersect();
                     t = scene.intersectWithScene(new Ray(origin, direction));
                     if (t > 0)
                     {
