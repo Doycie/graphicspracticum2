@@ -55,11 +55,21 @@ namespace Template
 
         public void Input(KeyboardState keyboard)
         {
-            if (keyboard[OpenTK.Input.Key.D])
-            {
-            }
             if (keyboard[OpenTK.Input.Key.A])
             {
+                camera.MovePosition(new Vector3(-0.1f, 0 , 0));
+            }
+            if (keyboard[OpenTK.Input.Key.W])
+            {
+                camera.MovePosition(new Vector3(0, 0.1f, 0));
+            }
+            if (keyboard[OpenTK.Input.Key.S])
+            {
+                camera.MovePosition(new Vector3(0, -0.1f, 0));
+            }
+            if (keyboard[OpenTK.Input.Key.D])
+            {
+                camera.MovePosition(new Vector3(0.1f, 0, 0));
             }
         }
 

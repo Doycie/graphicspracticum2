@@ -14,7 +14,7 @@ namespace Template
         {
             this.origin = origin;
             this.direction = direction;
-            distance = float.MaxValue ;
+            distance = 100;
         }
     }
 
