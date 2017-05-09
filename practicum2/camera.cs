@@ -1,35 +1,42 @@
-﻿using System;
-using OpenTK;
+﻿using OpenTK;
+using System;
 
 namespace Template
 {
     public class Camera
     {
-        private Vector3 _pos;
-        private Vector3 _dir;
-        private Vector3[] _spCorners;
+        private Vector3 _location;
+        private Vector3 _direction;
+        
+        //The aspect ratio between the width and height of the screen.
+        private float _aspect;
 
-        public Camera(Vector3 pos, Vector3 dir)
+        //the distance from the camera location to the plane.
+        private float _distance;
+
+        //precalculated to increase performance.
+        private Vector3 _topLeftDirection;
+
+        public Camera(Vector3 location, Vector3 direction, float aspect, float distance = 1)
         {
-            _pos = pos;
-            _dir = dir;
-            CalculateCorners();
+            _location = location;
+            _aspect = aspect;
+            _distance = distance;
+            _direction = direction;
+            CalculateBotLeftCorner();
         }
 
-        public void LookAt(Vector3 p)
+        public void LookAt(Vector3 location)
         {
-            _dir = p - _pos;
-            _dir.Normalize();
-            CalculateCorners();
+            _direction = location - _location;
+            _direction.Normalize();
+
+            CalculateBotLeftCorner();
         }
 
-        private void CalculateCorners()
+        private void CalculateBotLeftCorner()
         {
-            Vector3 _spCenter = _pos + _dir;
-            _spCorners = new Vector3[3];
-            _spCorners[0] = _spCenter + new Vector3(-1.0f, -1.0f, 0.0f);
-            _spCorners[1] = _spCenter + new Vector3(1.0f, -1.0f, 0.0f);
-            _spCorners[2] = _spCenter + new Vector3(-1.0f, 1.0f, 0.0f);
+            _topLeftDirection = _direction * _distance + new Vector3(-0.5f, 0, _aspect / 2);
         }
 
         public void Transform(Matrix4 M)
@@ -37,16 +44,21 @@ namespace Template
             // Matrix4 n = new Vector4(_pos,1.0f) * M);
         }
 
-        public Vector3 GetRayDirection(float u, float v)
+        public Vector3 GetRayDirection(float x, float y)
         {
-            Vector3 dir = (new Vector3(_spCorners[0] + u * (_spCorners[1] - _spCorners[0]) + v * (_spCorners[2] - _spCorners[0])) - _pos);
+            Vector3 dir = _topLeftDirection + new Vector3(x, 0, -_aspect * y);
             dir.Normalize();
             return dir ;
         }
 
         public Vector3 GetPosition()
         {
-            return _pos;
+            return _location;
+        }
+
+        public static float GetAspectRatio(float width, float height)
+        {
+            return height / width;
         }
     }
 }

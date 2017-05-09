@@ -1,4 +1,5 @@
-﻿using OpenTK;
+﻿using Extensions;
+using OpenTK;
 using System;
 
 namespace Template
@@ -19,17 +20,17 @@ namespace Template
 
     abstract class Primitive
     {
+        //Translates world space coordinates to screen space coordinates.
+        public delegate int T(float t);
+
         public abstract float Intersect(Ray ray);
 
-        public virtual void RenderDebug(Ray ray)
-        {
-            
-        }
+        public abstract void RenderDebug(Surface surface, T TX, T TY);
     }
 
     class Sphere : Primitive
     {
-        public Vector3 position
+        public Vector3 location
         {
             get; private set;
         }
@@ -43,16 +44,16 @@ namespace Template
             get; private set;
         }
 
-        public Sphere(Vector3 position, float radius)
+        public Sphere(Vector3 location, float radius)
         {
             color = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-            this.position = position;
+            this.location = location;
             this.radius = radius;
         }
 
         public override float Intersect(Ray ray)
         {
-            Vector3 rayOriginToSphereOrigin = position - ray.origin;
+            Vector3 rayOriginToSphereOrigin = location - ray.origin;
 
             //We calculate the distance from t to the center of the circle. 
             float t = Vector3.Dot(rayOriginToSphereOrigin, ray.direction);
@@ -65,6 +66,20 @@ namespace Template
             if ((t < ray.distance) && (t > 0))
                 return t;
             return -1.0f;
+        }
+
+        public override void RenderDebug(Surface surface, T TX, T TY)
+        {
+            float angle = (float)Math.PI / 100 * 2;
+            Vector2 v1 = new Vector2(radius, 0);
+            Vector2 v2 = v1.Rotate(angle);
+            v2.Rotate(angle);
+            for(float a = 0; a < 99; a += 1)
+            {
+                surface.Line(TX(v1.X + location.X), TY(v1.Y + location.Y), TX(v2.X + location.X), TY(v2.Y + location.Y), 0xFFFFFF);
+                v1 = v2;
+                v2 = v2.Rotate(angle);
+            }
         }
     }
 
@@ -91,6 +106,12 @@ namespace Template
                 return t;
             else
                 return -1.0f;
+        }
+
+        //We can;t render a plane because it would fill the entire screen of be a flat line.
+        public override void RenderDebug(Surface surface, T TX, T TY)
+        {
+            return;
         }
     }
 }

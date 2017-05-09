@@ -22,7 +22,6 @@ namespace Template
         // initialize
         public void Init()
         {
-            camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1));
             scene = new Scene();
             d_scale = 24.0f;
             d_width = screen.width / 2;
@@ -30,7 +29,9 @@ namespace Template
             d_offsetX = screen.width / 2;
             d_offsetY = 0;
 
-            camera.LookAt(new Vector3(1.0f, 0.0f, 2.0f));
+            camera = new Camera(new Vector3(0, 0, 0), new Vector3(0, 0, 1), Camera.GetAspectRatio(d_width, d_height));
+
+            camera.LookAt(new Vector3(0.0f, 1.0f, 0.0f));
         }
 
         public void Tick()
@@ -38,6 +39,8 @@ namespace Template
             screen.Clear(0);
 
             RenderRaycastScene();
+
+            RenderDebugProps();
         }
 
         private int TX(float x)
@@ -77,23 +80,34 @@ namespace Template
                     direction = camera.GetRayDirection(x / (float)viewportWidth, y / (float)viewportHeight);
                     col = 0;
 
-                    Intersect intersect = new Intersect();
                     t = scene.IntersectWithScene(new Ray(origin, direction));
                     if (t > 0)
                     {
                         col = ((int)((1 / (t * t) * 255)) << 16) + ((int)((1 / (t * t) * 255)) << 8);
                     }
-                    screen.pixels[x + y * screen.width] = col;
+                    screen.Plot(x, y, col);
                     if (y == viewportHeight / 2 && x % 32 == 0)
                     {
                         if (t <= 0)
                         {
                             t = 100.0f;
                         }
-                        screen.Line(TX(camera.GetPosition().X), TY(-camera.GetPosition().Z), TX(((t) * direction).X), TY(-((t) * direction).Z), 255 << 8);
+                        screen.Line(TX(camera.GetPosition().X), TY(camera.GetPosition().Y), TX(t * direction.X), TY(t * direction.Y), 255 << 8);
                     }
                 }
             }
+        }
+
+        private void RenderDebugProps()
+        {
+            List<Primitive> props = scene.GetObjects();
+            for (int i = 0; i < props.Count; i++)
+                props[i].RenderDebug(screen, TX, TY);
+        }
+
+        private void RenderDebug()
+        {
+
         }
     }
 }
