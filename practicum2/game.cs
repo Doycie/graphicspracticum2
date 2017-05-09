@@ -55,11 +55,21 @@ namespace Template
 
         public void Input(KeyboardState keyboard)
         {
-            if (keyboard[OpenTK.Input.Key.D])
-            {
-            }
             if (keyboard[OpenTK.Input.Key.A])
             {
+                camera.MovePosition(new Vector3(-0.1f, 0 , 0));
+            }
+            if (keyboard[OpenTK.Input.Key.W])
+            {
+                camera.MovePosition(new Vector3(0, 0.1f, 0));
+            }
+            if (keyboard[OpenTK.Input.Key.S])
+            {
+                camera.MovePosition(new Vector3(0, -0.1f, 0));
+            }
+            if (keyboard[OpenTK.Input.Key.D])
+            {
+                camera.MovePosition(new Vector3(0.1f, 0, 0));
             }
         }
 
@@ -86,8 +96,8 @@ namespace Template
                     if (y == viewportHeight / 2 && x % 32 == 0)
                     {
                         screen.Line(TX(camera.GetPosition().X), TY(camera.GetPosition().Y), 
-                            TX(intersect.OriginalRay.distance * direction.X),
-                            TY(intersect.OriginalRay.distance * direction.Y), 255 << 8);
+                            TX(intersect.OriginalRay.distance * direction.X + camera.GetPosition().X),
+                            TY(intersect.OriginalRay.distance * direction.Y + camera.GetPosition().Y), 255 << 8);
                     }
                 }
             }

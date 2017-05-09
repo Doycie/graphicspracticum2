@@ -5,7 +5,7 @@ namespace Template
 {
     public class Camera
     {
-        private Vector3 _location;
+        private Vector3 _position;
         private Vector3 _direction;
         
         //The aspect ratio between the width and height of the screen.
@@ -19,7 +19,7 @@ namespace Template
 
         public Camera(Vector3 location, Vector3 direction, float aspect, float distance = 1)
         {
-            _location = location;
+            _position = location;
             _aspect = aspect;
             _distance = distance;
             _direction = direction;
@@ -28,7 +28,7 @@ namespace Template
 
         public void LookAt(Vector3 location)
         {
-            _direction = location - _location;
+            _direction = location - _position;
             _direction.Normalize();
 
             CalculateBotLeftCorner();
@@ -53,7 +53,19 @@ namespace Template
 
         public Vector3 GetPosition()
         {
-            return _location;
+            return _position;
+        }
+
+        public void ChangePosition(Vector3 newPosition)
+        {
+            _position = newPosition;
+            CalculateBotLeftCorner();
+        }
+
+        public void MovePosition(Vector3 direction)
+        {
+            _position += direction;
+            CalculateBotLeftCorner();
         }
 
         public static float GetAspectRatio(float width, float height)
