@@ -80,8 +80,8 @@ namespace Template
                     Intersect intersect = new Intersect();
                     intersect.OriginalRay = r;
 
-                    intersect =  scene.IntersectWithScene(intersect);
-
+                    scene.IntersectWithScene(intersect);
+                
                     screen.Plot(x, y, intersect.Col);
                     if (y == viewportHeight / 2 && x % 32 == 0)
                     {

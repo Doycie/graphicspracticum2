@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using OpenTK;
 namespace Template
 {
-    struct Intersect{
+    class Intersect{
         public int Col;
         public Ray OriginalRay;
 
@@ -22,7 +22,7 @@ namespace Template
             entities.Add(new Plane(new Vector3(0, 0, -10), 10.0f));
         }
 
-        public Intersect IntersectWithScene(Intersect intersect)
+        public void IntersectWithScene(Intersect intersect)
         {
             foreach (var primitive in entities)
             {
@@ -34,7 +34,7 @@ namespace Template
             }
             float t = intersect.OriginalRay.distance;
             intersect.Col = ((int)((1 / (t * t) * 255)) << 16) + ((int)((1 / (t * t) * 255)) << 8);
-            return intersect;
+
         }
 
         public List<Primitive> GetObjects()
