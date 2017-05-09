@@ -4,9 +4,8 @@ using OpenTK;
 namespace Template
 {
     struct Intersect{
-        public float Distance;
-        public float Col;
-        public Ray originalRay;
+        public int Col;
+        public Ray OriginalRay;
 
     }
     class Scene
@@ -23,21 +22,19 @@ namespace Template
             entities.Add(new Plane(new Vector3(0, 0, -10), 10.0f));
         }
 
-        public float IntersectWithScene(Ray ray)
+        public Intersect IntersectWithScene(Intersect intersect)
         {
-            float distance = 0;
-
             foreach (var primitive in entities)
             {
-                float dis = primitive.Intersect(ray);
+                float dis = primitive.Intersect(intersect.OriginalRay);
                 if (dis > 0)
                 {
-                    ray.distance = dis;
-                    distance = dis;
+                    intersect.OriginalRay.distance = dis;
                 }
             }
-
-            return distance;
+            float t = intersect.OriginalRay.distance;
+            intersect.Col = ((int)((1 / (t * t) * 255)) << 16) + ((int)((1 / (t * t) * 255)) << 8);
+            return intersect;
         }
 
         public List<Primitive> GetObjects()

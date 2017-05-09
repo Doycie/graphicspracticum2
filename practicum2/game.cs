@@ -70,29 +70,24 @@ namespace Template
 
             Vector3 origin = camera.GetPosition();
             Vector3 direction;
-            float t = 0.0f;
-            int col = 0;
 
             for (int x = 0; x < viewportWidth; x++)
             {
                 for (int y = 0; y < viewportHeight; y++)
                 {
                     direction = camera.GetRayDirection(x / (float)viewportWidth, y / (float)viewportHeight);
-                    col = 0;
+                    Ray r = new Ray(origin, direction);
+                    Intersect intersect = new Intersect();
+                    intersect.OriginalRay = r;
 
-                    t = scene.IntersectWithScene(new Ray(origin, direction));
-                    if (t > 0)
-                    {
-                        col = ((int)((1 / (t * t) * 255)) << 16) + ((int)((1 / (t * t) * 255)) << 8);
-                    }
-                    screen.Plot(x, y, col);
+                    intersect =  scene.IntersectWithScene(intersect);
+
+                    screen.Plot(x, y, intersect.Col);
                     if (y == viewportHeight / 2 && x % 32 == 0)
                     {
-                        if (t <= 0)
-                        {
-                            t = 100.0f;
-                        }
-                        screen.Line(TX(camera.GetPosition().X), TY(camera.GetPosition().Y), TX(t * direction.X), TY(t * direction.Y), 255 << 8);
+                        screen.Line(TX(camera.GetPosition().X), TY(camera.GetPosition().Y), 
+                            TX(intersect.OriginalRay.distance * direction.X),
+                            TY(intersect.OriginalRay.distance * direction.Y), 255 << 8);
                     }
                 }
             }

@@ -156,8 +156,6 @@ namespace Template
 
         public void Circle(int x, int y, float r,int c)
         {
-
-
             float angle = 0;
             float x2 = 0;
             float y2 = 0;
