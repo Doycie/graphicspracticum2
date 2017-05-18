@@ -4,7 +4,7 @@ using System;
 
 namespace Template
 {
-    struct Ray
+    class Ray
     {
         public Vector3 origin;
         public Vector3 direction;
@@ -14,7 +14,7 @@ namespace Template
         {
             this.origin = origin;
             this.direction = direction;
-            distance = 100;
+            distance = 1000.0f;
         }
     }
 
@@ -23,7 +23,7 @@ namespace Template
         //Translates world space coordinates to screen space coordinates.
         public delegate int T(float t);
 
-        public abstract float Intersect(Ray ray);
+        public abstract void Intersect(Ray ray);
 
         public abstract void RenderDebug(Surface surface, T TX, T TY);
     }
@@ -51,7 +51,7 @@ namespace Template
             this.radius = radius;
         }
 
-        public override float Intersect(Ray ray)
+        public override void Intersect(Ray ray)
         {
             Vector3 rayOriginToSphereOrigin = location - ray.origin;
 
@@ -60,12 +60,11 @@ namespace Template
 
             Vector3 q = rayOriginToSphereOrigin - t * ray.direction;
             float p2 = Vector3.Dot(q, q);
-            if (p2 > radius * radius)
-                return -1.0f;
+            if (p2 > radius * radius) return;
             t -= (float)Math.Sqrt(radius * radius - p2);
             if ((t < ray.distance) && (t > 0))
-                return t;
-            return -1.0f;
+                ray.distance = t;
+          
         }
 
         public override void RenderDebug(Surface surface, T TX, T TY)
@@ -94,7 +93,7 @@ namespace Template
             _distance = distance;
         }
 
-        public override float Intersect(Ray ray)
+        public override void Intersect(Ray ray)
         {
             //We first calculate the distance from the origin of the ray to the plane
             float t = Vector3.Dot(ray.origin, _normal) + _distance;
@@ -102,10 +101,8 @@ namespace Template
             //Next we divide this distance by the angle the plane and the normal vector of the plane, giving us the distance from the ray to the plane.
             t /= Vector3.Dot(ray.direction, _normal);
 
-            if (t < ray.distance)
-                return t;
-            else
-                return -1.0f;
+            if (t > 0 && t < ray.distance)
+                ray.distance = t;
         }
 
         //We can;t render a plane because it would fill the entire screen of be a flat line.

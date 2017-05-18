@@ -23,7 +23,7 @@ namespace Template
         public void Init()
         {
             scene = new Scene();
-            d_scale = 24.0f;
+            d_scale = 16.0f;
             d_width = screen.width / 2;
             d_height = screen.height;
             d_offsetX = screen.width / 2;
@@ -41,6 +41,8 @@ namespace Template
             RenderRaycastScene();
 
             RenderDebugProps();
+
+            
         }
 
         private int TX(float x)
@@ -85,26 +87,47 @@ namespace Template
             {
                 for (int y = 0; y < viewportHeight; y++)
                 {
+                    Intersect intersect = new Intersect();
+
                     direction = camera.GetRayDirection(x / (float)viewportWidth, y / (float)viewportHeight);
                     Ray r = new Ray(origin, direction);
-                    Intersect intersect = new Intersect();
                     intersect.PrimaryRay = r;
 
                     scene.PrimaryRayIntersectWithScene(intersect);
-                    scene.LightRayIntersectWithScene(intersect);
+                   // scene.LightRayIntersectWithScene(intersect);
                 
-                    screen.Plot(x, y, intersect.Col);
+                    screen.Plot(x, y, ((int)(intersect.Col.X * 255) << 16) + ((int)(intersect.Col.Y * 255) << 8) + ((int)(intersect.Col.Z * 255)) );
+
                     if (y == viewportHeight / 2 && x % 32 == 0)
                     {
+                        Vector3 d = (intersect.PrimaryRay.distance) * intersect.PrimaryRay.direction;
+
+                        if (x == 256)
+                        {
+
+                            Console.Clear();
+                            Console.WriteLine(intersect.PrimaryRay.distance);
+                            Console.WriteLine(intersect.PrimaryRay.direction);
+                            Console.WriteLine(origin);
+                             Console.WriteLine(d);
+                        }
+
+                     
+
+                        screen.Line(
+                           TX(origin.X),
+                           TY(origin.Y),
+                           TX(d.X),
+                           TY(d.Y),
+                        (int)x/2 << 8);
+
                         //Primary Rays
-                        //screen.Line(TX(camera.GetPosition().X), TY(camera.GetPosition().Y), 
-                        //    TX(intersect.PrimaryRay.distance * direction.X),
-                        //    TY(intersect.PrimaryRay.distance * direction.Y), 255 << 8);
+
 
                         //Light Rays
-                        screen.Line(TX(intersect.LightRay.origin.X), TY(intersect.LightRay.origin.Y),
-                            TX(intersect.LightRay.distance * intersect.LightRay.direction.X),
-                            TY(intersect.LightRay.distance * intersect.LightRay.direction.Y), 255 );
+                        //screen.Line(TX(intersect.LightRay.origin.X), TY(intersect.LightRay.origin.Y),
+                        //    TX(intersect.LightRay.distance * intersect.LightRay.direction.X),
+                        //    TY(intersect.LightRay.distance * intersect.LightRay.direction.Y), 255 );
                     }
                 }
             }
